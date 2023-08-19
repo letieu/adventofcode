@@ -1,7 +1,7 @@
 use std::{path::Path, fs};
 
 pub fn main() {
-    let path = Path::new("./input.txt");
+    let path = Path::new("input/day1.txt");
     let content = fs::read_to_string(path).expect("Something went wrong reading the file");
 
     let mut top_three = [0, 0, 0];

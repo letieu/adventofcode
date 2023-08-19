@@ -3,11 +3,14 @@ use std::{fs, path::Path};
 pub fn main() {
     let path = Path::new("input/day3.txt");
     let content = fs::read_to_string(path).expect("Something went wrong reading the file");
+    let mut lines = content.lines();
 
     let mut total = 0;
-    for line in content.lines() {
-        let duplicate = find_duplicate(line);
-        total += get_item_priority(&duplicate);
+
+    while let (Some(a), Some(b), Some(c)) = (lines.next(), lines.next(), lines.next()) {
+        let duplicate = find_duplicate_in_group(a, b, c);
+        let priority = get_item_priority(&duplicate);
+        total += priority;
     }
 
     println!("Total: {}", total);
@@ -92,4 +95,24 @@ fn test_get_item_priority() {
 
     let priority = get_item_priority(&'P');
     assert_eq!(priority, 42);
+}
+
+fn find_duplicate_in_group(one: &str, two: &str, three: &str) -> char {
+    let duplicate = one
+        .chars()
+        .find(|&c| two.contains(c) && three.contains(c))
+        .expect("no duplicate found");
+
+    duplicate.to_owned()
+}
+
+#[test]
+fn test_find_duplicate_in_group_1() {
+    let duplicate = find_duplicate_in_group("vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg");
+    assert_eq!(duplicate, 'r');
+}
+
+fn test_find_duplicate_in_group_2() {
+    let duplicate = find_duplicate_in_group("wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn", "ttgJtRGJQctTZtZT", "CrZsJsPPZsGzwwsLwLmpwMDw");
+    assert_eq!(duplicate, 'Z');
 }
